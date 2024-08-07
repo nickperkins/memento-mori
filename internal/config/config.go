@@ -22,9 +22,9 @@ func LoadConfig() (*Config, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to load .env file: %w", err)
 	}
-	intSleepDuration, err := strconv.Atoi(getEnv("SLEEP_DURATION", "300"))
+	intSleepDuration, err := strconv.Atoi(getEnv("POSTING_INTERVAL", "300"))
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse SLEEP_DURATION: %w", err)
+		return nil, fmt.Errorf("failed to parse POSTING_INTERVAL: %w", err)
 	}
 	cfg := &Config{
 		MastodonInstanceURL: getEnv("MASTODON_INSTANCE_URL", ""),
