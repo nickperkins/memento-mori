@@ -46,4 +46,8 @@ go.work
 # End of https://www.toptal.com/developers/gitignore/api/go,visualstudiocode
 
 .env
-memento-mori
+memento-mori_windows_amd64.exe
+memento-mori_linux_amd64
+memento-mori_linux_arm64
+memento-mori_darwin_amd64
+memento-mori_darwin_arm64
