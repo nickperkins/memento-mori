@@ -2,6 +2,7 @@ package bot
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/mattn/go-mastodon"
@@ -39,7 +40,7 @@ func (b *Bot) GetRandomQuote() (string, error) {
 // PostToot posts the given content on Mastodon.
 func (b *Bot) PostToot(ctx context.Context, content string) error {
 	if flags.Flags.DryRun {
-		fmt.Printf("Dry-run mode: Would have posted:\n%s\n", content)
+		log.Printf("Dry-run mode: Would have posted:\n%s\n", content)
 		return nil
 	}
 	result, err := b.client.PostStatus(ctx, &mastodon.Toot{
@@ -57,7 +58,7 @@ func (b *Bot) PostToot(ctx context.Context, content string) error {
 // Sleeps for the configured duration.
 func (b *Bot) Sleep(ctx context.Context) {
 	waitTime := b.SleepDuration * 60
-	fmt.Printf("Sleeping for %d minutes\n", b.SleepDuration)
+	log.Printf("Sleeping for %d minutes\n", b.SleepDuration)
 	// Sleep for the configured duration except if the context is cancelled
 	// This allows the bot to exit immediately if the context is cancelled
 	select {
