@@ -1,7 +1,6 @@
 package bot
 
 import (
-	"context"
 	"fmt"
 	"time"
 
@@ -9,6 +8,7 @@ import (
 	"github.com/nickperkins/momento-mori/internal/config"
 	"github.com/nickperkins/momento-mori/internal/flags"
 	"github.com/nickperkins/momento-mori/internal/quotes"
+	"golang.org/x/net/context"
 )
 
 // Bot represents the Mastodon bot.
@@ -16,11 +16,10 @@ type Bot struct {
 	client         *mastodon.Client
 	PostsDirectory string
 	SleepDuration  int // in minutes
-	context        context.Context
 }
 
 // NewBot creates a new instance of the Mastodon bot.f
-func NewBot(context context.Context, config *config.Config) *Bot {
+func NewBot(config *config.Config) *Bot {
 	c := mastodon.NewClient(&mastodon.Config{
 		Server:      config.MastodonInstanceURL,
 		AccessToken: config.AccessToken,
@@ -29,7 +28,6 @@ func NewBot(context context.Context, config *config.Config) *Bot {
 		client:         c,
 		PostsDirectory: config.QuotesFile,
 		SleepDuration:  config.SleepDuration,
-		context:        context,
 	}
 }
 
@@ -39,12 +37,12 @@ func (b *Bot) GetRandomQuote() (string, error) {
 }
 
 // PostToot posts the given content on Mastodon.
-func (b *Bot) PostToot(content string) error {
+func (b *Bot) PostToot(ctx context.Context, content string) error {
 	if flags.Flags.DryRun {
 		fmt.Printf("Dry-run mode: Would have posted:\n%s\n", content)
 		return nil
 	}
-	result, err := b.client.PostStatus(b.context, &mastodon.Toot{
+	result, err := b.client.PostStatus(ctx, &mastodon.Toot{
 		Status:      content,
 		SpoilerText: "Death",
 		Visibility:  "unlisted",
@@ -57,9 +55,16 @@ func (b *Bot) PostToot(content string) error {
 }
 
 // Sleeps for the configured duration.
-func (b *Bot) Sleep() {
+func (b *Bot) Sleep(ctx context.Context) {
 	waitTime := b.SleepDuration * 60
 	fmt.Printf("Sleeping for %d minutes\n", b.SleepDuration)
-	<-time.After(time.Duration(waitTime) * time.Second)
+	// Sleep for the configured duration except if the context is cancelled
+	// This allows the bot to exit immediately if the context is cancelled
+	select {
+	case <-ctx.Done():
+		return
+	case <-time.After(time.Duration(waitTime) * time.Second):
+		return
+	}
 
 }
