@@ -51,7 +51,7 @@ func (b *Bot) PostToot(ctx context.Context, content string) error {
 	if err != nil {
 		return fmt.Errorf("failed to post status: %w", err)
 	}
-	fmt.Printf("Post successfully posted on Mastodon: %s\n", result.URL)
+	log.Printf("Post successfully posted on Mastodon: %s\n", result.URL)
 	return nil
 }
 
