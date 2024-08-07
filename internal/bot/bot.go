@@ -44,15 +44,15 @@ func (b *Bot) PostToot(content string) error {
 		fmt.Printf("Dry-run mode: Would have posted:\n%s\n", content)
 		return nil
 	}
-	// result, err := b.client.PostStatus(b.context, &mastodon.Toot{
-	// 	Status:      content,
-	// 	SpoilerText: "Death",
-	// 	Visibility:  "unlisted",
-	// })
-	// if err != nil {
-	// 	return fmt.Errorf("failed to post status: %w", err)
-	// }
-	// fmt.Printf("Post successfully posted on Mastodon: %s\n", result.URL)
+	result, err := b.client.PostStatus(b.context, &mastodon.Toot{
+		Status:      content,
+		SpoilerText: "Death",
+		Visibility:  "unlisted",
+	})
+	if err != nil {
+		return fmt.Errorf("failed to post status: %w", err)
+	}
+	fmt.Printf("Post successfully posted on Mastodon: %s\n", result.URL)
 	return nil
 }
 
