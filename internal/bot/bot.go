@@ -46,7 +46,6 @@ func (b *Bot) PostToot(ctx context.Context, content string) error {
 	result, err := b.client.PostStatus(ctx, &mastodon.Toot{
 		Status:      content,
 		SpoilerText: "Death",
-		Visibility:  "unlisted",
 	})
 	if err != nil {
 		return fmt.Errorf("failed to post status: %w", err)

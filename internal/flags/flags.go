@@ -16,6 +16,8 @@ type Options struct {
 
 var Flags Options
 
+var Version string
+
 func init() {
 	flag.Usage = func() {
 		w := flag.CommandLine.Output()
@@ -28,7 +30,8 @@ func init() {
 	}
 }
 
-func SetupFlags() {
+func SetupFlags(version string) {
+	Version = version
 	const (
 		defaultDryRun  = false
 		dryRunUsage    = "Run the bot in dry-run mode"
@@ -52,7 +55,7 @@ func ParseFlags() {
 
 	if Flags.Version {
 		w := flag.CommandLine.Output()
-		fmt.Fprintf(w, "Version: %s\n", "v0.1.0")
+		fmt.Fprintf(w, "Version: %s\n", Version)
 		syscall.Exit(0)
 	}
 }

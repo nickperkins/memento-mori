@@ -14,12 +14,14 @@ import (
 	"github.com/nickperkins/momento-mori/internal/quotes"
 )
 
+var Version = "dev"
+
 func init() {
 	// Set up logging
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	// command line arguments
-	flags.SetupFlags()
+	flags.SetupFlags(Version)
 
 }
 
